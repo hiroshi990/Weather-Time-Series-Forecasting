@@ -1,0 +1,12 @@
+requests
+pandas
+numpy
+datetime
+matplotlib
+seaborn
+tensorflow
+scikit-learn 
+streamlit
+
+
+-e .
