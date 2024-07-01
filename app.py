@@ -16,9 +16,9 @@ plt.style.use("ggplot")
 
 
 
-model=load_model("weather forecasting/notebook/LSTM model.keras")
+model=load_model("notebook/LSTM model.keras")
 
-API_key = open("weather forecasting/api _key.txt", "r").read().strip()
+API_key = open("api _key.txt", "r").read().strip()
 start_date = pd.to_datetime("2024-04-01").strftime('%Y-%m-%d')
 today = datetime.now().strftime('%Y-%m-%d')
 st.title("Future Weather Forecasting")
