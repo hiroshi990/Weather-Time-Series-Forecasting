@@ -23,7 +23,6 @@ start_date = pd.to_datetime("2024-04-01").strftime('%Y-%m-%d')
 today = datetime.now().strftime('%Y-%m-%d')
 st.title("Future Weather Forecasting")
 location_input = st.text_input("Enter Place", "delhi")
-p
 @st.cache_data(persist=True)
 def data_extraction(api, begin, end, location):
     base_url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{location}/{begin}/{end}?unitGroup=metric&include=days&key={api}&contentType=json"
