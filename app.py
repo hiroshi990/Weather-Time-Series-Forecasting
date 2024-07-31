@@ -8,17 +8,23 @@ import streamlit as st
 from src.exception import CustomException
 from src.logger import logging
 import sys
+import os
 import tensorflow as tf 
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
-scaler=MinMaxScaler(feature_range=(0,1))
 plt.style.use("ggplot")
+from dotenv import load_dotenv
+load_dotenv() 
+# loading variables from .env file
 
 
-
+# importing the model
 model=load_model("notebook/LSTM model.keras")
+scaler=MinMaxScaler(feature_range=(0,1))
+#accesing the api key
+API_key=os.environ["weather_api"]
 
-API_key = open("api _key.txt", "r").read().strip()
+
 start_date = pd.to_datetime("2024-04-01").strftime('%Y-%m-%d')
 today = datetime.now().strftime('%Y-%m-%d')
 st.title("Future Weather Forecasting")
@@ -78,36 +84,25 @@ else:
     st.error("No data available to display.")
     
 ###making the prediction system
-# @st.cache_data(persist=True)
 def feature_extraction():
     try:
         
         #creating the list for each feature
-        X0=[] #day
-        X1=[] #month
-        X2=[] #year
-        X3=[] #feelslike
         X4=[] #temperature
         y=[] #temperature
         for i in range(0,df.shape[0]-30):
-            X0.append(df.iloc[i:i+30,10])
-            X1.append(df.iloc[i:i+30,11])
-            X2.append(df.iloc[i:i+30,12])
-            X3.append(df.iloc[i:i+30,4])
             X4.append(df.iloc[i:i+30,3])
             y.append(df.iloc[i+30,3])
             
-        X0,X1,X2,X3,X4,y=np.array(X0),np.array(X1),np.array(X2),np.array(X3),np.array(X4),np.array(y)
+        X4,y=np.array(X4),np.array(y)
         y=np.reshape(y,(len(y),1))
         
-        scldX0=scaler.fit_transform(X0)
-        scldX1=scaler.fit_transform(X1)
-        scldX2=scaler.fit_transform(X2)
         scldX4=scaler.fit_transform(X4)
         scldy=scaler.fit_transform(y)
         
-        X=np.stack([scldX0,scldX1,scldX2,scldX4],axis=2)
+        X=np.stack([scldX4],axis=2)
         
+        #Predictions
         predictions=model.predict(X)
         predictions=scaler.inverse_transform(predictions)
         inv_y=scaler.inverse_transform(scldy)
@@ -125,13 +120,10 @@ def feature_extraction():
         
         
         latest_data = df.tail(30)
-        latest_X0 = scaler.transform(latest_data[["day"]])
-        latest_X1 = scaler.transform(latest_data[["month"]])
-        latest_X2 = scaler.transform(latest_data[["year"]])
         latest_X4 = scaler.transform(latest_data[["temp"]])
-        latest_X0,latest_X1,latest_X2,latest_X4=np.array(latest_X0),np.array(latest_X1),np.array(latest_X2),np.array(latest_X4)
+        latest_X4=np.array(latest_X4)
 
-        latest_X = np.stack([latest_X0, latest_X1, latest_X2, latest_X4], axis=2)
+        latest_X = np.stack([latest_X4], axis=2)
 
         # Predict the next day's temperature
         next_day_prediction = model.predict(latest_X)
@@ -152,15 +144,3 @@ def feature_extraction():
         raise CustomException(e,sys)
 whole_df,next_day_temp=feature_extraction()
 st.text(f"Tomorrow's forcasted temperature : {next_day_temp:.2f}°C")
-
-
-
-
-                
-
-
-
-
-
-
-

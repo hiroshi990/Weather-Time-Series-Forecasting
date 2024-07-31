@@ -3,6 +3,7 @@ pandas
 numpy
 datetime
 matplotlib
+python-dotenv
 seaborn
 tensorflow
 scikit-learn 
