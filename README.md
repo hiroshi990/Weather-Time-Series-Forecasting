@@ -53,8 +53,10 @@ To run the Weather Forecasting App locally, follow these steps:
         - A graph showing actual and predicted temperatures.
         - The forecasted temperature for the next day.
 
-
-
+8. **Deployment on Render:**
+   The Weather Forecasting App has been deployed on Render. You can access it directly via the following link:
+   
+   [Render](https://weather-time-series-forecasting.onrender.com)
 
 
 
